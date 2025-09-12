@@ -144,8 +144,7 @@ Webflow.push(function() {
     $('.input.is-reservation.is-adults').on('click', function() {
       if (!modalOpen) {
         gsap.to('.modal-adults-child', {
-          opacity: 1,
-          y: 0,
+          autoAlpha: 1,
           duration: 0.4,
           ease: 'power2.out'
         });
@@ -154,8 +153,7 @@ Webflow.push(function() {
       } else {
         // Fechar modal
         gsap.to('.modal-adults-child', {
-          opacity: 0,
-          y: '200%',
+          autoAlpha: 0,
           duration: 0.4,
           ease: 'power2.in'
         });
@@ -239,7 +237,9 @@ Webflow.push(function() {
     updateButtons();
     
     // Configurar posição inicial do modal
-    gsap.set('.modal-adults-child', {opacity: 0, y:'200%' });
+   gsap.set('.modal-adults-child', {
+      autoAlpha: 0
+    });
     
   });
 });
