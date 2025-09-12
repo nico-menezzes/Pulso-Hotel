@@ -155,7 +155,7 @@ Webflow.push(function() {
         // Fechar modal
         gsap.to('.modal-adults-child', {
           opacity: 0,
-          y: '-200%',
+          y: '200%',
           duration: 0.4,
           ease: 'power2.in'
         });
@@ -169,6 +169,7 @@ Webflow.push(function() {
       if (modalOpen && !$(e.target).closest('.modal-adults-child, .input.is-reservation.is-adults').length) {
         gsap.to('.modal-adults-child', {
           opacity: 0,
+          y: '200%',
           duration: 0.4,
           ease: 'power2.in'
         });
