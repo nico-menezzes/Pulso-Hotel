@@ -89,7 +89,8 @@ Webflow.push(function() {
           checkoutISO = flatpickr.formatDate(selectedDates[1], "Y-m-d");
           
           if (selectedDates[1] <= selectedDates[0]) {
-            alert('Check-out deve ser após check-in');
+            const errorMsg = isEnglish ? 'Check-out must be after check-in' : 'Check-out deve ser após check-in';
+            alert(errorMsg);
             rangePicker.clear();
             $('#checkin').val('');
             $('#checkout').val('');
@@ -106,11 +107,19 @@ Webflow.push(function() {
     
     // Função para atualizar texto dos contadores
     const updateCounterText = () => {
-      const adultsText = adultsCount === 1 ? '1 Adulto' : `${adultsCount} Adultos`;
-      const childrenText = childrenCount === 0 ? '0 Crianças' : (childrenCount === 1 ? '1 Criança' : `${childrenCount} Crianças`);
+      let adultsText, childrenText;
       
-      $('[data-adults]').text(adultsText).attr('data-adults', adultsCount);
-      $('[data-child]').text(childrenText).attr('data-child', childrenCount);
+      if (isEnglish) {
+        adultsText = adultsCount === 1 ? '1 Adult' : `${adultsCount} Adults`;
+        childrenText = childrenCount === 0 ? '0 Children' : (childrenCount === 1 ? '1 Child' : `${childrenCount} Children`);
+      } else {
+        adultsText = adultsCount === 1 ? '1 Adulto' : `${adultsCount} Adultos`;
+        childrenText = childrenCount === 0 ? '0 Crianças' : (childrenCount === 1 ? '1 Criança' : `${childrenCount} Crianças`);
+      }
+      
+      // Atualizar os textos dos elementos (não altera os atributos data-*)
+      $('[data-adults]').text(adultsText);
+      $('[data-child]').text(childrenText);
       
       // Atualizar placeholder do input principal
       $('[data-placeholder]').text(`${adultsText}, ${childrenText}`);
