@@ -227,38 +227,24 @@ Webflow.push(function() {
     
 
 // Submit do formulário
-   // Submit do formulário
-    $("#reservation-form").off("submit").on("submit", function(e) {
-      // Mata qualquer comportamento padrão e propagação do Webflow
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-      
-      // Se o usuário não selecionou datas, usar as datas padrão (hoje e amanhã)
-      let finalCheckinISO = checkinISO;
-      let finalCheckoutISO = checkoutISO;
-      
-      if (!finalCheckinISO || !finalCheckoutISO) {
-        finalCheckinISO = dateToISO(today);
-        finalCheckoutISO = dateToISO(tomorrow);
-      }
-      
-      const locale = lang === 'en' ? 'en-US' : 'pt-PT';
-      const url = `https://be.synxis.com/?adult=${adultsCount}&arrive=${finalCheckinISO}&chain=10237&child=${childrenCount}&currency=BRL&depart=${finalCheckoutISO}&hotel=41350&level=hotel&locale=${locale}&productcurrency=BRL&rooms=1`;
-      
-      // TÉCNICA DO LINK INVISÍVEL
-      // Cria um elemento 'a' temporário
-      const link = document.createElement('a');
-      link.href = url;
-      link.target = '_blank'; // Força nova aba
-      link.rel = 'noopener noreferrer'; // Segurança e performance
-      
-      // Adiciona ao corpo, clica e remove
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      return false; // Retorna falso para garantir que o form pare aqui
+  // Submit do formulário
+$("#reservation-form").on("submit", function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  
+  let finalCheckinISO = checkinISO;
+  let finalCheckoutISO = checkoutISO;
+  
+  if (!finalCheckinISO || !finalCheckoutISO) {
+    finalCheckinISO = dateToISO(today);
+    finalCheckoutISO = dateToISO(tomorrow);
+  }
+  
+  const locale = lang === 'en' ? 'en-US' : 'pt-PT';
+  const url = `https://be.synxis.com/?adult=${adultsCount}&arrive=${finalCheckinISO}&chain=10237&child=${childrenCount}&currency=BRL&depart=${finalCheckoutISO}&hotel=41350&level=hotel&locale=${locale}&productcurrency=BRL&rooms=1`;
+  
+  window.open(url, '_blank', 'noopener,noreferrer');
+});
     
     // Inicializar estado
     updateCounterText();
