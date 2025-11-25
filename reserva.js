@@ -227,26 +227,61 @@ Webflow.push(function() {
     
 
 // Submit do formulário
-// Submit do formulário
-// Submit do formulário
-$("#reservation-form").on("submit", function(e) {
-  e.preventDefault();
-  
-  // Se o usuário não selecionou datas, usar as datas padrão (hoje e amanhã)
-  let finalCheckinISO = checkinISO;
-  let finalCheckoutISO = checkoutISO;
-  
-  if (!finalCheckinISO || !finalCheckoutISO) {
-    finalCheckinISO = dateToISO(today);
-    finalCheckoutISO = dateToISO(tomorrow);
-  }
-  
-  const locale = lang === 'en' ? 'en-US' : 'pt-PT';
-  const url = `https://be.synxis.com/?adult=${adultsCount}&arrive=${finalCheckinISO}&chain=10237&child=${childrenCount}&currency=BRL&depart=${finalCheckoutISO}&hotel=41350&level=hotel&locale=${locale}&productcurrency=BRL&rooms=1`;
-  
-  // 👉 Agora abre em uma nova aba com segurança
-  window.open(url, '_blank', 'noopener,noreferrer');
-});
+// Submit do formulário — versão robusta p/ abrir em nova aba
+(function () {
+
+  // Função utilitária: abre URL em nova aba via formulário temporário (mais confiável no Webflow)
+  const openInNewTab = (url) => {
+    try {
+      // 1) Tenta abrir imediatamente (aproveitando gesto do usuário)
+      const newTab = window.open('', '_blank', 'noopener,noreferrer');
+      if (newTab) {
+        newTab.location.href = url;
+        return;
+      }
+    } catch (_) { /* segue para o fallback */ }
+
+    // 2) Fallback super-confiável: submit de form temporário com target=_blank
+    const tempForm = document.createElement('form');
+    tempForm.method = 'GET';
+    tempForm.action = url;
+    tempForm.target = '_blank';
+    tempForm.style.display = 'none';
+    document.body.appendChild(tempForm);
+    tempForm.submit();
+    document.body.removeChild(tempForm);
+  };
+
+  // Remova qualquer handler anterior de submit (para evitar conflitos)
+  $("#reservation-form").off("submit");
+
+  // Em vez de depender só do submit, prendemos no clique do botão (gesto direto do usuário)
+  // Ajuste o seletor do botão caso o seu seja diferente:
+  const $submitBtn = $("#reservation-form").find('[type="submit"], .w-button[type="submit"]');
+
+  $submitBtn.off('click').on('click', function(e) {
+    e.preventDefault(); // impede o submit padrão do Webflow
+
+    // ----- monta a URL exatamente como no seu código -----
+    let finalCheckinISO = checkinISO;
+    let finalCheckoutISO = checkoutISO;
+
+    if (!finalCheckinISO || !finalCheckoutISO) {
+      finalCheckinISO = dateToISO(today);
+      finalCheckoutISO = dateToISO(tomorrow);
+    }
+
+    const locale = lang === 'en' ? 'en-US' : 'pt-PT';
+    const url = `https://be.synxis.com/?adult=${adultsCount}&arrive=${finalCheckinISO}&chain=10237&child=${childrenCount}&currency=BRL&depart=${finalCheckoutISO}&hotel=41350&level=hotel&locale=${locale}&productcurrency=BRL&rooms=1`;
+    // -----------------------------------------------------
+
+    openInNewTab(url);
+  });
+
+  // (opcional) ainda seta target no form pra reforçar o comportamento
+  $("#reservation-form").attr("target", "_blank");
+
+})();
         
     // Inicializar estado
     updateCounterText();
