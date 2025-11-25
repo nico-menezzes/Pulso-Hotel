@@ -227,7 +227,7 @@ Webflow.push(function() {
     
     // Submit do formulário
    // Submit do formulário - usar return false para garantir
-$("#reservation-form").on("submit", function(e) {
+$(document).on("click", "input[type='submit']" {
   e.preventDefault();
   e.stopPropagation();
   
