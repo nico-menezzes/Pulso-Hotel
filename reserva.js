@@ -240,7 +240,7 @@ Webflow.push(function() {
       
       const locale = lang === 'en' ? 'en-US' : 'pt-PT';
       const url = `https://be.synxis.com/?adult=${adultsCount}&arrive=${finalCheckinISO}&chain=10237&child=${childrenCount}&currency=BRL&depart=${finalCheckoutISO}&hotel=41350&level=hotel&locale=${locale}&productcurrency=BRL&rooms=1`;
-      window.location.href = url;
+      window.open(url, '_blank');
     });
     
     // Inicializar estado
