@@ -259,8 +259,7 @@ Webflow.push(function() {
       document.body.removeChild(link);
       
       return false; // Retorna falso para garantir que o form pare aqui
-    });
-        
+    
     // Inicializar estado
     updateCounterText();
     updateButtons();
