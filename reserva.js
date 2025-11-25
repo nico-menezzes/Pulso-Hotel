@@ -227,11 +227,12 @@ Webflow.push(function() {
     
 
 // Submit do formulário
-    // Substitua o bloco do .on("submit") por este .on("click") no botão
-    // Isso previne que o Webflow intercepte o envio
-    $("#reservation-form").find('input[type="submit"], .w-button').on("click", function(e) {
+   // Submit do formulário
+    $("#reservation-form").off("submit").on("submit", function(e) {
+      // Mata qualquer comportamento padrão e propagação do Webflow
       e.preventDefault();
-      e.stopPropagation(); // Garante que o evento não suba para o form
+      e.stopPropagation();
+      e.stopImmediatePropagation();
       
       // Se o usuário não selecionou datas, usar as datas padrão (hoje e amanhã)
       let finalCheckinISO = checkinISO;
@@ -245,8 +246,19 @@ Webflow.push(function() {
       const locale = lang === 'en' ? 'en-US' : 'pt-PT';
       const url = `https://be.synxis.com/?adult=${adultsCount}&arrive=${finalCheckinISO}&chain=10237&child=${childrenCount}&currency=BRL&depart=${finalCheckoutISO}&hotel=41350&level=hotel&locale=${locale}&productcurrency=BRL&rooms=1`;
       
-      // Abre em nova aba
-      window.open(url, '_blank');
+      // TÉCNICA DO LINK INVISÍVEL
+      // Cria um elemento 'a' temporário
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank'; // Força nova aba
+      link.rel = 'noopener noreferrer'; // Segurança e performance
+      
+      // Adiciona ao corpo, clica e remove
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      return false; // Retorna falso para garantir que o form pare aqui
     });
         
     // Inicializar estado
