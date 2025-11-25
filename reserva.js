@@ -227,9 +227,11 @@ Webflow.push(function() {
     
 
 // Submit do formulário
+// Submit do formulário
 $("#reservation-form").on("submit", function(e) {
   e.preventDefault();
   
+  // Se o usuário não selecionou datas, usar as datas padrão (hoje e amanhã)
   let finalCheckinISO = checkinISO;
   let finalCheckoutISO = checkoutISO;
   
@@ -241,7 +243,16 @@ $("#reservation-form").on("submit", function(e) {
   const locale = lang === 'en' ? 'en-US' : 'pt-PT';
   const url = `https://be.synxis.com/?adult=${adultsCount}&arrive=${finalCheckinISO}&chain=10237&child=${childrenCount}&currency=BRL&depart=${finalCheckoutISO}&hotel=41350&level=hotel&locale=${locale}&productcurrency=BRL&rooms=1`;
   
-  window.open(url, '_blank', 'noopener,noreferrer');
+  // 🚀 Abre nova aba imediatamente (para não ser bloqueado)
+  const newTab = window.open('', '_blank', 'noopener,noreferrer');
+  
+  // Redireciona a nova aba para a URL da reserva
+  if (newTab) {
+    newTab.location.href = url;
+  } else {
+    // Caso o bloqueador de pop-up impeça a abertura
+    alert(isEnglish ? 'Please allow pop-ups for this site to open the reservation page.' : 'Permita pop-ups neste site para abrir a página de reserva.');
+  }
 });
         
     // Inicializar estado
