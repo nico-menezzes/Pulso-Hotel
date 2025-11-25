@@ -225,30 +225,24 @@ Webflow.push(function() {
       }
     });
     
-    // Submit do formulário
-   // Submit do formulário - usar return false para garantir
-// Submit do formulário - usar return false para garantir
-Webflow.push(function() {
-  $(document).ready(function() {
-    
-    // Bloquear comportamento padrão do form ANTES de tudo
-    document.querySelector('#reservation-form').onsubmit = function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    };
-    
-    // Capturar clique do botão submit
-    document.querySelector('input[type="submit"]').addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      // Tua lógica aqui
-      const url = 'https://be.synxis.com/...'; // URL montada
-      window.open(url, '_blank');
-      
-      return false;
-    }, true); // true = usar capture phase
+
+// Submit do formulário
+$("#reservation-form").on("submit", function(e) {
+  e.preventDefault();
+  
+  let finalCheckinISO = checkinISO;
+  let finalCheckoutISO = checkoutISO;
+  
+  if (!finalCheckinISO || !finalCheckoutISO) {
+    finalCheckinISO = dateToISO(today);
+    finalCheckoutISO = dateToISO(tomorrow);
+  }
+  
+  const locale = lang === 'en' ? 'en-US' : 'pt-PT';
+  const url = `https://be.synxis.com/?adult=${adultsCount}&arrive=${finalCheckinISO}&chain=10237&child=${childrenCount}&currency=BRL&depart=${finalCheckoutISO}&hotel=41350&level=hotel&locale=${locale}&productcurrency=BRL&rooms=1`;
+  
+  window.open(url, '_blank', 'noopener,noreferrer');
+});
         
     // Inicializar estado
     updateCounterText();
